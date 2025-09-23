@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Attendance System</title>
+    <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAQAABILAAASCwAAAAAAAAAAAAD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A5eXlMOXl5f/l5eX/5eXl/+Xl5f/l5eX/5eXlMOXl5QD///8A////AP///wD///8A////AP///wDl5eUw5eXl/+Xl5f/l5eX/5eXl/+Xl5f/l5eX/5eXl/+Xl5TDl5eUA////AP///wD///8A////AOXl5TDl5eX/5eXl/+Xl5f/l5eX/5eXl/+Xl5f/l5eX/5eXl/+Xl5f/l5eUw5eXlAP///wD///8A5eXlMOXl5f/l5eX/5eXl/+Xl5f/l5eX/5eXl/+Xl5f/l5eX/5eXl/+Xl5f/l5eX/5eXlMP///wD///8A5eXl/+Xl5f/l5eX/5eXl/+Xl5f/l5eX/5eXl/+Xl5f/l5eX/5eXl/+Xl5f/l5eX/5eXl/////wD///8A5eXl/+Xl5f/l5eX/6urq/+rq6v/q6ur/6urq/+rq6v/q6ur/6urq/+Xl5f/l5eX/5eXl/////wD///8A5eXl/+Xl5f/q6ur/////////////////////////////////////////////////////////////////////////////////6urq/+Xl5f/l5eX/////AP///wDl5eX/5eXl/+rq6v/////////////////////////////////q6ur/6urq/+rq6v/l5eX/5eXl/////wD///8A5eXl/+Xl5f/q6ur/////////////////////////////////////////////////////////////////////////////////6urq/+Xl5f/l5eX/////AP///wDl5eX/5eXl/+rq6v/q6ur/6urq/+rq6v/q6ur/6urq/+rq6v/q6ur/6urq/+Xl5f/l5eX/////AP///wDl5eX/5eXl/+Xl5f/l5eX/5eXl/+Xl5f/l5eX/5eXl/+Xl5f/l5eX/5eXl/+Xl5f/l5eX/////AP///wD///8A5eXlMOXl5f/l5eX/5eXl/+Xl5f/l5eX/5eXl/+Xl5f/l5eX/5eXl/+Xl5f/l5eX/5eXlMP///wD///8A////AOXl5QDl5eUw5eXl/+Xl5f/l5eX/5eXl/+Xl5f/l5eX/5eXl/+Xl5f/l5eUw5eXlAP///wD///8A////AP///wD///8A5eXlAOXl5TDl5eX/5eXl/+Xl5f/l5eX/5eXl/+Xl5TDl5eUA////AP///wD///8A////AP///wD///8A////AP///wD///8A5eXlMOXl5f/l5eX/5eXl/+Xl5TDl5eUA////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A5eXlAOXl5QDl5eUA////AP///wD///8A//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAA==">
+    <script>
+        // Browser compatibility polyfills for ethers.js v6
+        if (typeof global === 'undefined') {
+            window.global = globalThis;
+        }
+        if (typeof process === 'undefined') {
+            window.process = { env: {} };
+        }
+
+        // CDN fallback detection
+        window.ethersLoadError = false;
+    </script>
+    <script
+        src="https://cdn.jsdelivr.net/npm/ethers@6.15.0/dist/ethers.umd.min.js"
+        onerror="window.ethersLoadError = true;"
+        onload="console.log('Ethers.js loaded successfully from jsDelivr CDN');">
+    </script>
+    <script>
+        // Fallback CDN for ethers.js
+        if (window.ethersLoadError || typeof ethers === 'undefined') {
+            console.warn('Primary CDN failed, loading fallback...');
+            const script = document.createElement('script');
+            script.src = 'https://unpkg.com/ethers@6.15.0/dist/ethers.umd.min.js';
+            script.onload = () => console.log('Ethers.js loaded from unpkg fallback CDN');
+            script.onerror = () => {
+                console.error('All CDN sources failed. Please check your internet connection.');
+                alert('Failed to load required libraries. Please refresh the page or check your internet connection.');
+            };
+            document.head.appendChild(script);
+        }
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card h2 {
+            color: #5a67d8;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+        }
+
+        .status-section {
+            grid-column: 1 / -1;
+        }
+
+        .connection-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: 500;
+        }
+
+        .status-connected {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+
+        .status-disconnected {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .status-connected .status-indicator {
+            background: #38a169;
+        }
+
+        .status-disconnected .status-indicator {
+            background: #e53e3e;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #5a67d8;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #5a67d8, #667eea);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .btn:hover {
+            background: linear-gradient(135deg, #4c51bf, #5a67d8);
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            background: #a0aec0;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #38a169, #48bb78);
+        }
+
+        .btn-success:hover {
+            background: linear-gradient(135deg, #2f855a, #38a169);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #ed8936, #f6ad55);
+        }
+
+        .btn-warning:hover {
+            background: linear-gradient(135deg, #dd6b20, #ed8936);
+        }
+
+        .attendance-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: #f7fafc;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .info-value {
+            color: #2d3748;
+            font-weight: 500;
+        }
+
+        .employee-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .employee-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            background: #f8f9fa;
+        }
+
+        .employee-name {
+            font-weight: 600;
+        }
+
+        .employee-address {
+            font-size: 0.9rem;
+            color: #666;
+            font-family: monospace;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+
+        .status-inactive {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+
+        .loading {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+        }
+
+        .error {
+            background: #fed7d7;
+            color: #742a2a;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid #e53e3e;
+        }
+
+        .success {
+            background: #c6f6d5;
+            color: #22543d;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid #38a169;
+        }
+
+        .info-message {
+            background: #bee3f8;
+            color: #2b6cb0;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid #3182ce;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .attendance-actions {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔒 Privacy Attendance System</h1>
+            <p>Confidential Employee Attendance Management with Zero-Knowledge Privacy</p>
+        </div>
+
+        <div class="card status-section">
+            <h2>Connection Status</h2>
+            <div id="connectionStatus" class="connection-status status-disconnected">
+                <div class="status-indicator"></div>
+                <span>Not Connected to Wallet</span>
+            </div>
+            <button id="connectWallet" class="btn">Connect Wallet</button>
+        </div>
+
+        <div class="main-content">
+            <div class="card">
+                <h2>Employee Registration</h2>
+                <div id="registrationSection">
+                    <div class="form-group">
+                        <label for="employeeAddress">Employee Address</label>
+                        <input type="text" id="employeeAddress" placeholder="0x...">
+                    </div>
+                    <div class="form-group">
+                        <label for="employeeName">Employee Name</label>
+                        <input type="text" id="employeeName" placeholder="Enter full name">
+                    </div>
+                    <button id="registerEmployee" class="btn">Register Employee</button>
+                    <button id="deactivateEmployee" class="btn btn-warning">Deactivate Employee</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Attendance Management</h2>
+                <div id="attendanceSection">
+                    <div class="attendance-actions">
+                        <button id="checkIn" class="btn btn-success">Check In</button>
+                        <button id="checkOut" class="btn btn-warning">Check Out</button>
+                    </div>
+                    <button id="finalizePeriod" class="btn">Finalize Current Period</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="card">
+                <h2>Current Status</h2>
+                <div id="statusInfo">
+                    <div class="info-item">
+                        <span class="info-label">Current Period:</span>
+                        <span class="info-value" id="currentPeriod">Loading...</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Your Status:</span>
+                        <span class="info-value" id="userStatus">Not Connected</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Today's Date:</span>
+                        <span class="info-value" id="currentDate">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Network:</span>
+                        <span class="info-value" id="networkStatus">Not Connected</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Contract Owner:</span>
+                        <span class="info-value" id="contractOwnerDisplay">Loading...</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Registered Employees</h2>
+                <div id="employeeList" class="employee-list">
+                    <div class="loading">Connect wallet to load employees...</div>
+                </div>
+                <button id="refreshEmployees" class="btn">Refresh List</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Contract configuration - Privacy Attendance System
+        // Using ethers.js v6.15.0 with proper browser polyfills
+        const CONTRACT_ADDRESS = "0x9aa3CA890ebffD5629c75CcdF060BA3593979e90";
+        const CONTRACT_ABI = [{"inputs":[],"stateMutability":"nonpayable","type":"constructor"},{"inputs":[],"name":"HandlesAlreadySavedForRequestID","type":"error"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"employee","type":"address"},{"indexed":false,"internalType":"uint256","name":"period","type":"uint256"},{"indexed":false,"internalType":"uint8","name":"workHours","type":"uint8"}],"name":"AttendanceDecrypted","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"employee","type":"address"},{"indexed":true,"internalType":"uint256","name":"period","type":"uint256"}],"name":"CheckInRecorded","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"employee","type":"address"},{"indexed":true,"internalType":"uint256","name":"period","type":"uint256"}],"name":"CheckOutRecorded","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"employee","type":"address"}],"name":"EmployeeDeactivated","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"employee","type":"address"},{"indexed":false,"internalType":"string","name":"name","type":"string"}],"name":"EmployeeRegistered","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"uint256","name":"period","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"totalEmployees","type":"uint256"}],"name":"PeriodFinalized","type":"event"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"allEmployees","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"},{"internalType":"uint256","name":"","type":"uint256"}],"name":"attendanceRecords","outputs":[{"internalType":"euint8","name":"encryptedCheckInHour","type":"bytes32"},{"internalType":"euint8","name":"encryptedCheckOutHour","type":"bytes32"},{"internalType":"ebool","name":"hasCheckedIn","type":"bytes32"},{"internalType":"ebool","name":"hasCheckedOut","type":"bytes32"},{"internalType":"euint8","name":"encryptedWorkHours","type":"bytes32"},{"internalType":"uint256","name":"recordDate","type":"uint256"},{"internalType":"bool","name":"isProcessed","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"checkIn","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"checkOut","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"currentPeriod","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"employeeAddr","type":"address"}],"name":"deactivateEmployee","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"employees","outputs":[{"internalType":"bool","name":"isRegistered","type":"bool"},{"internalType":"string","name":"name","type":"string"},{"internalType":"uint256","name":"registrationTime","type":"uint256"},{"internalType":"bool","name":"isActive","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"finalizePeriod","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"getAllEmployees","outputs":[{"internalType":"address[]","name":"","type":"address[]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"employeeAddr","type":"address"},{"internalType":"uint256","name":"period","type":"uint256"}],"name":"getAttendanceStatus","outputs":[{"internalType":"bool","name":"hasRecord","type":"bool"},{"internalType":"uint256","name":"recordDate","type":"uint256"},{"internalType":"bool","name":"isProcessed","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getCurrentDay","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"employeeAddr","type":"address"}],"name":"getEmployeeInfo","outputs":[{"internalType":"bool","name":"isRegistered","type":"bool"},{"internalType":"string","name":"name","type":"string"},{"internalType":"uint256","name":"registrationTime","type":"uint256"},{"internalType":"bool","name":"isActive","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"period","type":"uint256"}],"name":"getPeriodEmployees","outputs":[{"internalType":"address[]","name":"","type":"address[]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"period","type":"uint256"}],"name":"getPeriodInfo","outputs":[{"internalType":"uint256","name":"totalEmployees","type":"uint256"},{"internalType":"uint256","name":"activeEmployees","type":"uint256"},{"internalType":"uint256","name":"startTime","type":"uint256"},{"internalType":"uint256","name":"endTime","type":"uint256"},{"internalType":"bool","name":"isFinalized","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getTotalEmployees","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"},{"internalType":"uint256","name":"","type":"uint256"}],"name":"periodEmployees","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"periodSummaries","outputs":[{"internalType":"uint256","name":"totalEmployees","type":"uint256"},{"internalType":"uint256","name":"activeEmployees","type":"uint256"},{"internalType":"uint256","name":"startTime","type":"uint256"},{"internalType":"uint256","name":"endTime","type":"uint256"},{"internalType":"bool","name":"isFinalized","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"},{"internalType":"uint8","name":"workHours","type":"uint8"},{"internalType":"bytes[]","name":"","type":"bytes[]"}],"name":"processAttendanceDecryption","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"employeeAddr","type":"address"},{"internalType":"string","name":"name","type":"string"}],"name":"registerEmployee","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"employeeAddr","type":"address"},{"internalType":"uint256","name":"period","type":"uint256"}],"name":"requestAttendanceDecryption","outputs":[],"stateMutability":"nonpayable","type":"function"}];
+
+        let provider, signer, contract, userAccount, contractOwner, isOwner = false;
+
+        // Check if ethers.js is loaded properly
+        function checkEthersLoaded() {
+            if (typeof ethers === 'undefined') {
+                showError('Ethers.js library failed to load. Please refresh the page.');
+                return false;
+            }
+            console.log('Ethers.js v' + (ethers.version || '6.x') + ' loaded successfully');
+            return true;
+        }
+
+        // Initialize the application
+        async function init() {
+            updateCurrentDate();
+
+            // Check if ethers is loaded before proceeding
+            if (!checkEthersLoaded()) {
+                return;
+            }
+
+            await checkWalletConnection();
+        }
+
+        // Update current date display
+        function updateCurrentDate() {
+            const now = new Date();
+            document.getElementById('currentDate').textContent = now.toLocaleDateString();
+        }
+
+        // Check if wallet is already connected
+        async function checkWalletConnection() {
+            if (typeof window.ethereum !== 'undefined') {
+                try {
+                    const accounts = await window.ethereum.request({
+                        method: 'eth_accounts'
+                    });
+
+                    if (accounts.length > 0) {
+                        await connectWallet();
+                    }
+                } catch (error) {
+                    console.error('Error checking wallet connection:', error);
+                }
+            }
+        }
+
+        // Sepolia testnet configuration
+        const SEPOLIA_CHAIN_ID = '0xaa36a7'; // 11155111 in hex
+        const SEPOLIA_CONFIG = {
+            chainId: SEPOLIA_CHAIN_ID,
+            chainName: 'Sepolia Test Network',
+            nativeCurrency: {
+                name: 'SepoliaETH',
+                symbol: 'SEP',
+                decimals: 18,
+            },
+            rpcUrls: ['https://sepolia.infura.io/v3/'],
+            blockExplorerUrls: ['https://sepolia.etherscan.io/'],
+        };
+
+        // Check if connected to Sepolia network
+        async function checkNetwork() {
+            const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+            return chainId === SEPOLIA_CHAIN_ID;
+        }
+
+        // Switch to Sepolia network
+        async function switchToSepolia() {
+            try {
+                await window.ethereum.request({
+                    method: 'wallet_switchEthereumChain',
+                    params: [{ chainId: SEPOLIA_CHAIN_ID }],
+                });
+            } catch (switchError) {
+                // This error code indicates that the chain has not been added to MetaMask
+                if (switchError.code === 4902) {
+                    try {
+                        await window.ethereum.request({
+                            method: 'wallet_addEthereumChain',
+                            params: [SEPOLIA_CONFIG],
+                        });
+                    } catch (addError) {
+                        throw new Error('Failed to add Sepolia network to MetaMask');
+                    }
+                } else {
+                    throw switchError;
+                }
+            }
+        }
+
+        // Connect to MetaMask wallet
+        async function connectWallet() {
+            try {
+                // Step 1: Check if MetaMask is installed
+                if (typeof window.ethereum === 'undefined') {
+                    showError('Please install MetaMask to use this application');
+                    return;
+                }
+
+                showSuccess('Connecting to MetaMask...');
+
+                // Step 2: Request account access
+                const accounts = await window.ethereum.request({
+                    method: 'eth_requestAccounts'
+                });
+
+                // Step 3: Check network and switch to Sepolia if needed
+                const isCorrectNetwork = await checkNetwork();
+                if (!isCorrectNetwork) {
+                    showSuccess('Switching to Sepolia testnet...');
+                    await switchToSepolia();
+                }
+
+                // Step 4: Set up provider and signer
+                provider = new ethers.BrowserProvider(window.ethereum);
+                signer = await provider.getSigner();
+                userAccount = accounts[0];
+
+                // Step 5: Initialize contract
+                contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
+
+                // Step 6: Update UI state
+                updateConnectionStatus(true);
+
+                // Step 7: Load initial data
+                await loadOwnerInfo();
+                await loadUserStatus();
+                await loadEmployeeList();
+                updateNetworkStatus();
+
+                showSuccess('Connected to Sepolia! ✅');
+            } catch (error) {
+                console.error('Error connecting wallet:', error);
+                showError('Failed to connect wallet: ' + error.message);
+            }
+        }
+
+        // Update connection status display
+        function updateConnectionStatus(connected) {
+            const statusDiv = document.getElementById('connectionStatus');
+            const connectBtn = document.getElementById('connectWallet');
+
+            if (connected) {
+                statusDiv.className = 'connection-status status-connected';
+                statusDiv.innerHTML = `
+                    <div class="status-indicator"></div>
+                    <span>Connected: ${userAccount.slice(0, 6)}...${userAccount.slice(-4)}</span>
+                `;
+                connectBtn.textContent = 'Disconnect';
+                connectBtn.onclick = disconnectWallet;
+
+                enableInteractions(true);
+            } else {
+                statusDiv.className = 'connection-status status-disconnected';
+                statusDiv.innerHTML = `
+                    <div class="status-indicator"></div>
+                    <span>Not Connected to Wallet</span>
+                `;
+                connectBtn.textContent = 'Connect Wallet';
+                connectBtn.onclick = connectWallet;
+
+                enableInteractions(false);
+            }
+        }
+
+        // Disconnect wallet
+        function disconnectWallet() {
+            provider = null;
+            signer = null;
+            contract = null;
+            userAccount = null;
+
+            updateConnectionStatus(false);
+            showSuccess('Wallet disconnected');
+
+            // Reset UI
+            document.getElementById('currentPeriod').textContent = 'Not Connected';
+            document.getElementById('userStatus').textContent = 'Not Connected';
+            document.getElementById('networkStatus').textContent = 'Not Connected';
+            document.getElementById('contractOwnerDisplay').textContent = 'Not Connected';
+            document.getElementById('employeeList').innerHTML = '<div class="loading">Connect wallet to load employees...</div>';
+
+            // Remove owner indicator
+            const indicator = document.getElementById('ownerIndicator');
+            if (indicator) {
+                indicator.remove();
+            }
+
+            // Reset role-based UI
+            contractOwner = null;
+            isOwner = false;
+        }
+
+        // Enable/disable interaction buttons
+        function enableInteractions(enabled) {
+            const buttons = ['registerEmployee', 'deactivateEmployee', 'checkIn', 'checkOut', 'finalizePeriod', 'refreshEmployees'];
+            buttons.forEach(id => {
+                document.getElementById(id).disabled = !enabled;
+            });
+        }
+
+        // Register new employee
+        async function registerEmployee() {
+            try {
+                const address = document.getElementById('employeeAddress').value;
+                const name = document.getElementById('employeeName').value;
+
+                if (!address || !name) {
+                    showError('Please fill in all fields');
+                    return;
+                }
+
+                if (!ethers.isAddress(address)) {
+                    showError('Invalid Ethereum address');
+                    return;
+                }
+
+                if (!isOwner) {
+                    showError('Only the contract owner can register employees. Current owner: ' + contractOwner);
+                    return;
+                }
+
+                showSuccess('Registering employee...');
+
+                const tx = await contract.registerEmployee(address, name);
+                await tx.wait();
+
+                showSuccess('Employee registered successfully!');
+
+                // Clear form
+                document.getElementById('employeeAddress').value = '';
+                document.getElementById('employeeName').value = '';
+
+                await loadEmployeeList();
+            } catch (error) {
+                console.error('Error registering employee:', error);
+
+                if (error.message.includes('Not authorized')) {
+                    showError('❌ Access Denied: Only the contract owner can register employees');
+                } else if (error.message.includes('Employee already registered')) {
+                    showError('⚠️ This employee is already registered');
+                } else {
+                    showError('Failed to register employee: ' + error.message);
+                }
+            }
+        }
+
+        // Deactivate employee
+        async function deactivateEmployee() {
+            try {
+                const address = document.getElementById('employeeAddress').value;
+
+                if (!address) {
+                    showError('Please enter employee address');
+                    return;
+                }
+
+                if (!ethers.isAddress(address)) {
+                    showError('Invalid Ethereum address');
+                    return;
+                }
+
+                showSuccess('Deactivating employee...');
+
+                const tx = await contract.deactivateEmployee(address);
+                await tx.wait();
+
+                showSuccess('Employee deactivated successfully!');
+
+                document.getElementById('employeeAddress').value = '';
+                await loadEmployeeList();
+            } catch (error) {
+                console.error('Error deactivating employee:', error);
+                showError('Failed to deactivate employee: ' + error.message);
+            }
+        }
+
+        // Check in
+        async function checkIn() {
+            try {
+                showSuccess('Checking in...');
+
+                const tx = await contract.checkIn();
+                await tx.wait();
+
+                showSuccess('✅ Checked in successfully! Your attendance is now recorded privately.');
+
+                await loadUserStatus();
+            } catch (error) {
+                console.error('Error checking in:', error);
+
+                if (error.message.includes('Employee not registered')) {
+                    showError('❌ You are not registered as an employee. Please ask the contract owner to register your address: ' + userAccount);
+                } else if (error.message.includes('Already processed for today')) {
+                    showError('⚠️ You have already checked in today');
+                } else {
+                    showError('Failed to check in: ' + error.message);
+                }
+            }
+        }
+
+        // Check out
+        async function checkOut() {
+            try {
+                showSuccess('Checking out...');
+
+                const tx = await contract.checkOut();
+                await tx.wait();
+
+                showSuccess('Checked out successfully!');
+
+                await loadUserStatus();
+            } catch (error) {
+                console.error('Error checking out:', error);
+                showError('Failed to check out: ' + error.message);
+            }
+        }
+
+        // Finalize current period
+        async function finalizePeriod() {
+            try {
+                showSuccess('Finalizing period...');
+
+                const tx = await contract.finalizePeriod();
+                await tx.wait();
+
+                showSuccess('Period finalized successfully!');
+
+                await loadUserStatus();
+            } catch (error) {
+                console.error('Error finalizing period:', error);
+                showError('Failed to finalize period: ' + error.message);
+            }
+        }
+
+        // Load contract owner information
+        async function loadOwnerInfo() {
+            try {
+                if (!contract) return;
+
+                contractOwner = await contract.owner();
+                isOwner = userAccount && userAccount.toLowerCase() === contractOwner.toLowerCase();
+
+                console.log('Contract Owner:', contractOwner);
+                console.log('Current User:', userAccount);
+                console.log('Is Owner:', isOwner);
+
+                // Update owner display
+                const ownerDisplay = document.getElementById('contractOwnerDisplay');
+                if (ownerDisplay) {
+                    if (isOwner) {
+                        ownerDisplay.textContent = contractOwner.slice(0, 6) + '...' + contractOwner.slice(-4) + ' (You)';
+                        ownerDisplay.style.color = '#38a169';
+                        ownerDisplay.style.fontWeight = 'bold';
+                    } else {
+                        ownerDisplay.textContent = contractOwner.slice(0, 6) + '...' + contractOwner.slice(-4);
+                    }
+                }
+
+                updateUIBasedOnRole();
+            } catch (error) {
+                console.error('Error loading owner info:', error);
+            }
+        }
+
+        // Update UI based on user role
+        function updateUIBasedOnRole() {
+            const registrationSection = document.getElementById('registrationSection');
+            const finalizePeriodBtn = document.getElementById('finalizePeriod');
+
+            if (isOwner) {
+                registrationSection.style.display = 'block';
+                finalizePeriodBtn.style.display = 'block';
+
+                // Add owner indicator
+                const existingIndicator = document.getElementById('ownerIndicator');
+                if (!existingIndicator) {
+                    const indicator = document.createElement('div');
+                    indicator.id = 'ownerIndicator';
+                    indicator.className = 'success';
+                    indicator.textContent = '👑 You are the contract owner - you can manage employees and periods';
+                    document.querySelector('.container').insertBefore(indicator, document.querySelector('.main-content'));
+                }
+            } else {
+                // Hide admin functions for non-owners
+                registrationSection.style.opacity = '0.5';
+                finalizePeriodBtn.style.opacity = '0.5';
+
+                // Add info for non-owners
+                const existingIndicator = document.getElementById('ownerIndicator');
+                if (existingIndicator) {
+                    existingIndicator.textContent = 'ℹ️ Only the contract owner can register employees. Ask an admin to register your address.';
+                    existingIndicator.className = 'info-message';
+                }
+            }
+        }
+
+        // Update network status display
+        function updateNetworkStatus() {
+            if (provider) {
+                document.getElementById('networkStatus').textContent = 'Sepolia Testnet ✅';
+            } else {
+                document.getElementById('networkStatus').textContent = 'Not Connected';
+            }
+        }
+
+        // Load user status
+        async function loadUserStatus() {
+            try {
+                if (!contract) return;
+
+                const period = await contract.currentPeriod();
+                document.getElementById('currentPeriod').textContent = period.toString();
+
+                if (userAccount) {
+                    const employeeInfo = await contract.getEmployeeInfo(userAccount);
+                    if (employeeInfo.isRegistered) {
+                        const status = employeeInfo.isActive ? 'Active Employee' : 'Inactive Employee';
+                        document.getElementById('userStatus').textContent = status;
+                    } else {
+                        document.getElementById('userStatus').textContent = 'Not Registered';
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading user status:', error);
+                document.getElementById('currentPeriod').textContent = 'Error';
+                document.getElementById('userStatus').textContent = 'Error';
+            }
+        }
+
+        // Load employee list
+        async function loadEmployeeList() {
+            try {
+                if (!contract) return;
+
+                const listDiv = document.getElementById('employeeList');
+                listDiv.innerHTML = '<div class="loading">Loading employees...</div>';
+
+                const employees = await contract.getAllEmployees();
+
+                if (employees.length === 0) {
+                    listDiv.innerHTML = '<div class="loading">No employees registered</div>';
+                    return;
+                }
+
+                listDiv.innerHTML = '';
+
+                for (const address of employees) {
+                    const info = await contract.getEmployeeInfo(address);
+                    const employeeDiv = document.createElement('div');
+                    employeeDiv.className = 'employee-item';
+                    employeeDiv.innerHTML = `
+                        <div>
+                            <div class="employee-name">${info.name}</div>
+                            <div class="employee-address">${address}</div>
+                        </div>
+                        <span class="status-badge ${info.isActive ? 'status-active' : 'status-inactive'}">
+                            ${info.isActive ? 'Active' : 'Inactive'}
+                        </span>
+                    `;
+                    listDiv.appendChild(employeeDiv);
+                }
+            } catch (error) {
+                console.error('Error loading employee list:', error);
+                document.getElementById('employeeList').innerHTML =
+                    '<div class="error">Failed to load employee list</div>';
+            }
+        }
+
+        // Show error message
+        function showError(message) {
+            const existing = document.querySelector('.error');
+            if (existing) existing.remove();
+
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error';
+            errorDiv.textContent = message;
+            document.querySelector('.container').insertBefore(errorDiv, document.querySelector('.header').nextSibling);
+
+            setTimeout(() => errorDiv.remove(), 5000);
+        }
+
+        // Show success message
+        function showSuccess(message) {
+            const existing = document.querySelector('.success');
+            if (existing) existing.remove();
+
+            const successDiv = document.createElement('div');
+            successDiv.className = 'success';
+            successDiv.textContent = message;
+            document.querySelector('.container').insertBefore(successDiv, document.querySelector('.header').nextSibling);
+
+            setTimeout(() => successDiv.remove(), 5000);
+        }
+
+        // Event listeners
+        document.getElementById('connectWallet').onclick = connectWallet;
+        document.getElementById('registerEmployee').onclick = registerEmployee;
+        document.getElementById('deactivateEmployee').onclick = deactivateEmployee;
+        document.getElementById('checkIn').onclick = checkIn;
+        document.getElementById('checkOut').onclick = checkOut;
+        document.getElementById('finalizePeriod').onclick = finalizePeriod;
+        document.getElementById('refreshEmployees').onclick = loadEmployeeList;
+
+        // Initialize on page load
+        window.addEventListener('load', init);
+
+        // Handle MetaMask events
+        if (window.ethereum) {
+            window.ethereum.on('accountsChanged', (accounts) => {
+                if (accounts.length === 0) {
+                    disconnectWallet();
+                } else {
+                    connectWallet();
+                }
+            });
+
+            window.ethereum.on('chainChanged', async (chainId) => {
+                if (chainId === SEPOLIA_CHAIN_ID) {
+                    showSuccess('Switched to Sepolia network ✅');
+                    window.location.reload();
+                } else {
+                    showError('Please switch to Sepolia testnet to use this application');
+                    disconnectWallet();
+                }
+            });
+        }
+    </script>
+</body>
+</html>
